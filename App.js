@@ -1,3 +1,4 @@
+// App.js (modified)
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -9,7 +10,9 @@ import CartScreen from './src/screen/CartScreen'
 import OrderScreen from './src/screen/OrderScreen'
 import Home from './src/screen/Home'
 import { Ionicons } from '@expo/vector-icons'
-
+import { CartAnimationProvider } from './src/context/CartAnimationContext'
+import CartAnimation from './src/component/common/CartAnimation'
+import { CartProvider } from './src/context/CartContext'
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator()
@@ -54,20 +57,18 @@ const TabNavigator = () => {
 const AppContent = () => {
   return (
     <SafeAreaProvider style={{ flex: 1, backgroundColor: '#1c1835' }}>
-      <NavigationContainer  >
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-
-
-          <Stack.Screen name="Tabs" component={TabNavigator} />
-
-
-        </Stack.Navigator>
-      </NavigationContainer>
+      <CartProvider>
+      <CartAnimationProvider>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Tabs" component={TabNavigator} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </CartAnimationProvider>
+      </CartProvider>
     </SafeAreaProvider>
   )
 }
-
-
 
 const App = () => {
   return (
