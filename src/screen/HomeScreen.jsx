@@ -193,7 +193,6 @@ const HomeScreen = () => {
         {viewMode === 'carousel' ? (
           <View style={styles.carouselContainer}>
             <FoodCarousel data={filteredData} />
-            <Text style={styles.swipeText}>Swipe to View Our Menu</Text>
           </View>
         ) : (
           <View style={styles.gridContainer}>
@@ -314,13 +313,6 @@ const styles = StyleSheet.create({
   },
   carouselContainer: {
     paddingVertical: 20,
-  },
-  swipeText: {
-    textAlign: 'center',
-    fontSize: 14,
-    color: '#666666',
-    marginTop: 10,
-    fontStyle: 'italic',
   },
   gridContainer: {
     paddingHorizontal: 20,
