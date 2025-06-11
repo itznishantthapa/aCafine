@@ -1,4 +1,4 @@
-package com.acafine
+package com.anonymous.aCafine
 
 import android.os.Build
 import android.os.Bundle

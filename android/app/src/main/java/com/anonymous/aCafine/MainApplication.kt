@@ -1,4 +1,4 @@
-package com.acafine
+package com.anonymous.aCafine
 
 import android.app.Application
 import android.content.res.Configuration

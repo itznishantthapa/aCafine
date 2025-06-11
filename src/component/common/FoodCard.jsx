@@ -12,48 +12,26 @@ const FoodCard = ({ data }) => {
   const { addItem } = useCart()
   const addButtonRef = useRef(null)
 
-  // Convert BigFoodCard data format to FoodCard format or use default
-  const item = data
-    ? {
-        id: data.id || 1,
-        food_name: data.title || data.name || "Veggie Burger",
-        is_vegetarian: data.isVeg !== undefined ? data.isVeg : true,
-        food_restaurant: "aCafine Cafe",
-        is_available: data.is_available !== undefined ? data.is_available : true,
-        food_price: data.currentPrice || Number.parseFloat(data.price) || 150,
-        original_price: data.originalPrice || null,
-        discount: data.discount || null,
-        image:
-          data.image ||
-          "https://images.unsplash.com/photo-1598214886806-c87b84b7078b?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vZCUyMGltYWdlc3xlbnwwfHwwfHx8MA%3D%3D",
-        description: data.description || "Delicious food item",
-      }
-    : {
-        id: 1,
-        food_name: "Veggie Burger",
-        is_vegetarian: true,
-        food_restaurant: "aCafine Cafe",
-        is_available: true,
-        food_price: 150,
-        original_price: 180,
-        discount: "17% OFF",
-        image:
-          "https://images.unsplash.com/photo-1598214886806-c87b84b7078b?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vZCUyMGltYWdlc3xlbnwwfHwwfHx8MA%3D%3D",
-        description: "Delicious veggie burger",
-      }
+  // Ensure data exists
+  if (!data) {
+    return null
+  }
 
-  // Create dish object in API format
+  // Extract data properties (coming from transformed API data)
+  const { id, title, currentPrice, originalPrice, discount, image, isVeg, is_available, category } = data
+
+  // Create dish object in API format for cart
   const dish = {
-    id: item.id,
-    name: item.food_name,
-    price: item.food_price.toString(),
-    image: item.image,
-    is_available: item.is_available,
-    description: item.description,
+    id: id,
+    name: title,
+    price: currentPrice.toString(),
+    image: image,
+    is_available: is_available,
+    description: `Delicious ${title}`,
   }
 
   const handleAddToCart = () => {
-    if (!item.is_available) return
+    if (!is_available) return
 
     // Add item to cart
     addItem(dish)
@@ -70,17 +48,17 @@ const FoodCard = ({ data }) => {
   return (
     <TouchableOpacity style={styles.card} onPress={() => undefined} activeOpacity={0.8}>
       <View style={styles.imageContainer}>
-        <Image source={{ uri: item.image }} style={styles.image} resizeMode="cover" />
-        {item.is_vegetarian && (
+        <Image source={{ uri: image }} style={styles.image} resizeMode="cover" />
+        {isVeg && (
           <View style={styles.vegIndicator}>
             <Ionicons name="leaf" size={10} color="#4CAF50" />
           </View>
         )}
         <TouchableOpacity
-          style={[styles.addButton, !item.is_available && styles.disabledButton]}
+          style={[styles.addButton, !is_available && styles.disabledButton]}
           onPress={handleAddToCart}
           ref={addButtonRef}
-          disabled={!item.is_available}
+          disabled={!is_available}
         >
           <AntDesign name="plus" size={16} color="#FFFFFF" />
         </TouchableOpacity>
@@ -88,39 +66,39 @@ const FoodCard = ({ data }) => {
 
       <View style={styles.infoContainer}>
         <Text style={styles.title} numberOfLines={1}>
-          {item.food_name}
+          {title}
         </Text>
 
         <Text style={styles.restaurant} numberOfLines={1}>
-          {item.food_restaurant}
+          aCafine Cafe
         </Text>
 
         <View style={styles.priceContainer}>
           <Text style={styles.price}>
-            Rs.<Text style={styles.priceNumber}>{item.food_price}</Text>
+            Rs.<Text style={styles.priceNumber}>{currentPrice}</Text>
           </Text>
-          {item.original_price && (
+          {originalPrice && originalPrice !== currentPrice && (
             <Text style={styles.originalPrice}>
-              Rs.<Text style={styles.originalPriceNumber}>{item.original_price}</Text>
+              Rs.<Text style={styles.originalPriceNumber}>{originalPrice}</Text>
             </Text>
           )}
         </View>
 
-        {item.discount && (
+        {discount && (
           <View style={styles.discountBadge}>
             <AntDesign name="tags" size={8} color="#FFFFFF" />
-            <Text style={styles.discountText}>{item.discount}</Text>
+            <Text style={styles.discountText}>{discount}</Text>
           </View>
         )}
 
-        <View style={[styles.availabilityContainer, { backgroundColor: item.is_available ? "#E8F5E9" : "#FFEBEE" }]}>
+        <View style={[styles.availabilityContainer, { backgroundColor: is_available ? "#E8F5E9" : "#FFEBEE" }]}>
           <Ionicons
-            name={item.is_available ? "checkmark-circle" : "close-circle"}
+            name={is_available ? "checkmark-circle" : "close-circle"}
             size={10}
-            color={item.is_available ? "#4CAF50" : "#F44336"}
+            color={is_available ? "#4CAF50" : "#F44336"}
           />
-          <Text style={[styles.availability, { color: item.is_available ? "#4CAF50" : "#F44336" }]}>
-            {item.is_available ? "Available" : "Unavailable"}
+          <Text style={[styles.availability, { color: is_available ? "#4CAF50" : "#F44336" }]}>
+            {is_available ? "Available" : "Unavailable"}
           </Text>
         </View>
       </View>

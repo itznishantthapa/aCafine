@@ -1,4 +1,10 @@
 PODS:
+  - AppAuth (1.7.6):
+    - AppAuth/Core (= 1.7.6)
+    - AppAuth/ExternalUserAgent (= 1.7.6)
+  - AppAuth/Core (1.7.6)
+  - AppAuth/ExternalUserAgent (1.7.6):
+    - AppAuth/Core
   - boost (1.84.0)
   - DoubleConversion (1.1.6)
   - EXConstants (17.1.6):
@@ -30,6 +36,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - ExpoAdapterGoogleSignIn (14.0.1):
+    - ExpoModulesCore
+    - GoogleSignIn (~> 7.1)
+    - React-Core
   - ExpoAsset (11.1.5):
     - ExpoModulesCore
   - ExpoFileSystem (18.1.10):
@@ -67,6 +77,14 @@ PODS:
   - FBLazyVector (0.79.3)
   - fmt (11.0.2)
   - glog (0.3.5)
+  - GoogleSignIn (7.1.0):
+    - AppAuth (< 2.0, >= 1.7.3)
+    - GTMAppAuth (< 5.0, >= 4.1.1)
+    - GTMSessionFetcher/Core (~> 3.3)
+  - GTMAppAuth (4.1.1):
+    - AppAuth/Core (~> 1.7)
+    - GTMSessionFetcher/Core (< 4.0, >= 3.3)
+  - GTMSessionFetcher/Core (3.5.0)
   - hermes-engine (0.79.3):
     - hermes-engine/Pre-built (= 0.79.3)
   - hermes-engine/Pre-built (0.79.3)
@@ -1469,6 +1487,30 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-webview (13.15.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - React-NativeModulesApple (0.79.3):
     - glog
     - hermes-engine
@@ -1839,6 +1881,31 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNGoogleSignin (14.0.1):
+    - DoubleConversion
+    - glog
+    - GoogleSignIn (~> 7.1)
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - SocketRocket (0.7.1)
   - Yoga (0.0.0)
 
@@ -1847,6 +1914,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - Expo (from `../node_modules/expo`)
+  - "ExpoAdapterGoogleSignIn (from `../node_modules/@react-native-google-signin/google-signin/expo/ios`)"
   - ExpoAsset (from `../node_modules/expo-asset/ios`)
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
   - ExpoFont (from `../node_modules/expo-font/ios`)
@@ -1891,6 +1959,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-oscompat (from `../node_modules/react-native/ReactCommon/oscompat`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1924,10 +1993,15 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
+    - AppAuth
+    - GoogleSignIn
+    - GTMAppAuth
+    - GTMSessionFetcher
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -1939,6 +2013,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-constants/ios"
   Expo:
     :path: "../node_modules/expo"
+  ExpoAdapterGoogleSignIn:
+    :path: "../node_modules/@react-native-google-signin/google-signin/expo/ios"
   ExpoAsset:
     :path: "../node_modules/expo-asset/ios"
   ExpoFileSystem:
@@ -2024,6 +2100,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-NativeModulesApple:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios"
   React-oscompat:
@@ -2090,14 +2168,18 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNGoogleSignin:
+    :path: "../node_modules/@react-native-google-signin/google-signin"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   EXConstants: 9f310f44bfedba09087042756802040e464323c0
   Expo: 4e8bda07d30b024b1732f87843a5349a3ecc1316
+  ExpoAdapterGoogleSignIn: b48e2797d1b090bd284b32ecb0de8f4a7bc45b13
   ExpoAsset: 3bc9adb7dbbf27ae82c18ca97eb988a3ae7e73b1
   ExpoFileSystem: c36eb8155eb2381c83dda7dc210e3eec332368b6
   ExpoFont: abbb91a911eb961652c2b0a22eef801860425ed6
@@ -2107,6 +2189,9 @@ SPEC CHECKSUMS:
   FBLazyVector: a62a7a5760929b6265e27bc01ab7598dde93ebd3
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
+  GoogleSignIn: d4281ab6cf21542b1cfaff85c191f230b399d2db
+  GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
+  GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   hermes-engine: 94ed01537bdeccaab1adbf94b040d115d6fa1a7f
   RCT-Folly: e78785aa9ba2ed998ea4151e314036f6c49e6d82
   RCTDeprecation: c3e3f5b4ea83e7ff3bc86ce09e2a54b7affd687d
@@ -2140,6 +2225,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: fae8da2c01aeb7f26ad739731b6dba61fd02fd97
   React-microtasksnativemodule: 20454ffccff553f0ee73fd20873aa8555a5867fb
   react-native-safe-area-context: 5594ec631ede9c311c5c0efa244228eff845ce88
+  react-native-webview: 85c8fc8ca09f4e67b68afbc86207a1442af5dc80
   React-NativeModulesApple: 65b2735133d6ce8a3cb5f23215ef85e427b0139c
   React-oscompat: f26aa2a4adc84c34212ab12c07988fe19e9cf16a
   React-perflogger: e15a0d43d1928e1c82f4f0b7fc05f7e9bccfede8
@@ -2173,6 +2259,7 @@ SPEC CHECKSUMS:
   ReactCommon: e243aa261effc83c10208f0794bade55ca9ae5b6
   RNCAsyncStorage: a1c8cc8a99c32de1244a9cf707bf9d83d0de0f71
   RNGestureHandler: ebef699ea17e7c0006c1074e1e423ead60ce0121
+  RNGoogleSignin: 180d2e70fa258bbcdb642c77d516880bce0055f1
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 29f74a5b77dca8c37669e1e1e867e5f4e12407df
 
