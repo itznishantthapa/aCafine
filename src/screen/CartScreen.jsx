@@ -183,17 +183,9 @@ const CartScreen = ({ navigation }) => {
           <Text style={styles.summaryLabel}>Total Items:</Text>
           <Text style={styles.summaryValue}>{totalItems}</Text>
         </View>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Subtotal:</Text>
-          <Text style={styles.summaryValue}>Rs. {totalAmount.toFixed(2)}</Text>
-        </View>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Tax (13%):</Text>
-          <Text style={styles.summaryValue}>Rs. {(totalAmount * 0.13).toFixed(2)}</Text>
-        </View>
         <View style={[styles.summaryRow, styles.totalRow]}>
           <Text style={styles.totalLabel}>Total Amount:</Text>
-          <Text style={styles.totalValue}>Rs. {(totalAmount * 1.13).toFixed(2)}</Text>
+          <Text style={styles.totalValue}>Rs. {totalAmount.toFixed(2)}</Text>
         </View>
       </View>
 
@@ -211,7 +203,7 @@ const CartScreen = ({ navigation }) => {
         visible={showPaymentSheet}
         onClose={() => setShowPaymentSheet(false)}
         onPaymentMethodSelect={handlePaymentMethodSelect}
-        totalAmount={totalAmount * 1.13}
+        totalAmount={totalAmount}
         loading={processingPayment}
       />
     </SafeAreaView>

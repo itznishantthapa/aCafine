@@ -27,7 +27,7 @@ const OrderScreen = ({ navigation }) => {
       setError(null)
       const response = await fetch('http://127.0.0.1:8000/api/get-user-orders/', {
         headers: {
-          'Authorization': `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NTc5NjQyLCJpYXQiOjE3NDk1NzY2NDIsImp0aSI6ImI3NjkwMzVkODNmMTQ2YzY4ZGU0YjJlYWJkYjdmMjUyIiwidXNlcl9pZCI6Mn0.39jhmeK4A3XRj0LwWWN-LsOGENF9jfFKoeDxB-R2m5Q"}`,
+          'Authorization': `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzEyMTExLCJpYXQiOjE3NDk2NTIxMTEsImp0aSI6IjgwNTlhNDdmMjU0NzRiNGFiYWQxYWI1NGZlNTU0OGI4IiwidXNlcl9pZCI6Mn0.jcTmoiNB_FlvIU_zhEaIZ6YURdQ8fzhlp7B1JAj4qv4"}`,
           'Content-Type': 'application/json',
         },
       });
@@ -92,7 +92,7 @@ const OrderScreen = ({ navigation }) => {
     if (!order?.is_ready) {
       return { status: "Cooking", color: "#FF6B35", icon: "restaurant" }
     } else {
-      return { status: "Ready", color: "#4CAF50", icon: "check-circle" }
+      return { status: "Done", color: "#4CAF50", icon: "check-circle" }
     }
   }
 
@@ -104,7 +104,7 @@ const OrderScreen = ({ navigation }) => {
     try {
       const response = await fetch(`http://127.0.0.1:8000/api/get-user-orders/`, {
         headers: {
-          Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NTc5NjQyLCJpYXQiOjE3NDk1NzY2NDIsImp0aSI6ImI3NjkwMzVkODNmMTQ2YzY4ZGU0YjJlYWJkYjdmMjUyIiwidXNlcl9pZCI6Mn0.39jhmeK4A3XRj0LwWWN-LsOGENF9jfFKoeDxB-R2m5Q"}`,
+          Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzEyMTExLCJpYXQiOjE3NDk2NTIxMTEsImp0aSI6IjgwNTlhNDdmMjU0NzRiNGFiYWQxYWI1NGZlNTU0OGI4IiwidXNlcl9pZCI6Mn0.jcTmoiNB_FlvIU_zhEaIZ6YURdQ8fzhlp7B1JAj4qv4"}`,
           "Content-Type": "application/json",
         },
       })

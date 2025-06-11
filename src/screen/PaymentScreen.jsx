@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { View, Text, StyleSheet, ActivityIndicator, Alert, SafeAreaView } from "react-native"
 import { WebView } from "react-native-webview"
 import { createEsewaPaymentForm, generateTransactionUuid, PRODUCT_CODE, verifySignature } from "../utils/eSewaUtils"
+import createOrder from "../service/apis/createOrder"
 // import apiService from "../service/apis/login"
 
 const PaymentScreen = ({ route, navigation }) => {
@@ -11,35 +12,48 @@ const PaymentScreen = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true)
   const [paymentHtml, setPaymentHtml] = useState("")
   const [transactionUuid, setTransactionUuid] = useState("")
+  const [paymentAttempts, setPaymentAttempts] = useState(0)
 
   useEffect(() => {
     initializePayment()
   }, [])
 
   const initializePayment = () => {
-    // Generate a unique transaction ID
-    const uuid = generateTransactionUuid()
-    setTransactionUuid(uuid)
+    try {
+      // Generate a unique transaction ID with timestamp and random suffix
+      const timestamp = new Date().getTime()
+      const randomSuffix = Math.floor(Math.random() * 1000)
+      const uuid = `${timestamp}-${randomSuffix}`
+      setTransactionUuid(uuid)
 
-    // Calculate tax (13% VAT)
-    const taxAmount = totalAmount * 0.13
-    const finalAmount = totalAmount + taxAmount
+      // Create the payment form HTML with zero tax
+      const paymentDetails = {
+        amount: totalAmount.toString(),
+        taxAmount: "0", // Set tax to zero since prices include tax
+        totalAmount: totalAmount.toString(),
+        transactionUuid: uuid,
+        productServiceCharge: "0",
+        productDeliveryCharge: "0",
+        successUrl: "https://developer.esewa.com.np/success",
+        failureUrl: "https://developer.esewa.com.np/failure",
+      }
 
-    // Create the payment form HTML
-    const paymentDetails = {
-      amount: totalAmount.toString(),
-      taxAmount: taxAmount.toString(),
-      totalAmount: finalAmount.toString(),
-      transactionUuid: uuid,
-      productServiceCharge: "0",
-      productDeliveryCharge: "0",
-      successUrl: "https://developer.esewa.com.np/success",
-      failureUrl: "https://developer.esewa.com.np/failure",
+      const html = createEsewaPaymentForm(paymentDetails)
+      setPaymentHtml(html)
+      setLoading(false)
+    } catch (error) {
+      console.error("Error initializing payment:", error)
+      Alert.alert(
+        "Payment Error",
+        "Failed to initialize payment. Please try again.",
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.goBack(),
+          },
+        ]
+      )
     }
-
-    const html = createEsewaPaymentForm(paymentDetails)
-    setPaymentHtml(html)
-    setLoading(false)
   }
 
   const handleNavigationStateChange = (navState) => {
@@ -77,7 +91,7 @@ const PaymentScreen = ({ route, navigation }) => {
       status: "COMPLETE",
       transaction_uuid: transactionUuid,
       product_code: PRODUCT_CODE,
-      total_amount: (totalAmount * 1.13).toString(),
+      total_amount: totalAmount.toString(),
     }
   }
 
@@ -104,20 +118,37 @@ const PaymentScreen = ({ route, navigation }) => {
 
       console.log("Creating order with payload:", orderPayload)
 
-      const response = await apiService.createOrder(orderPayload)
+      const response = await createOrder(orderPayload)
 
       if (response.message === "Order placed successfully") {
-        // Clear cart and navigate to orders
-        // Note: You might want to clear the cart here
+        // Clear cart and navigate to menu
         navigation.reset({
-          index: 1,
-          routes: [{ name: "Tabs" }, { name: "Order" }],
+          index: 0,
+          routes: [
+            { 
+              name: "Tabs",
+              state: {
+                routes: [{ name: "Order" }]
+              }
+            }
+          ],
         })
       } else {
-        throw new Error("Failed to create order")
+        throw new Error(response.error_message || "Failed to create order")
       }
     } catch (error) {
       console.error("Error creating order:", error)
+      
+      // Check if it's a duplicate transaction error
+      if (error.message?.includes("Duplicate transaction UUID")) {
+        // Generate new transaction UUID and retry
+        if (paymentAttempts < 3) {
+          setPaymentAttempts(prev => prev + 1)
+          initializePayment()
+          return
+        }
+      }
+
       Alert.alert(
         "Order Creation Failed",
         "Payment was successful but we couldn't create your order. Please contact support.",
@@ -126,7 +157,7 @@ const PaymentScreen = ({ route, navigation }) => {
             text: "OK",
             onPress: () => navigation.goBack(),
           },
-        ],
+        ]
       )
     } finally {
       setLoading(false)

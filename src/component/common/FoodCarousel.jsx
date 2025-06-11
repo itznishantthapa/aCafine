@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    bottom: 10,
+    bottom: 1,
     width: '100%',
   },
   dot: {

@@ -80,11 +80,11 @@ const PaymentBottomSheet = ({ visible, onClose, onPaymentMethodSelect, totalAmou
             >
               <View style={styles.paymentOptionLeft}>
                 <View style={styles.esewaLogo}>
-                  <Text style={styles.esewaLogoText}>eSewa</Text>
+                  <Image source={require("../../assets/images/esewa.png")} style={{height:"100%",width:'100%'}}/>
                 </View>
                 <View style={styles.paymentOptionInfo}>
-                  <Text style={styles.paymentOptionTitle}>eSewa Digital Wallet</Text>
-                  <Text style={styles.paymentOptionSubtitle}>Pay securely with your eSewa account</Text>
+                  <Text style={styles.paymentOptionTitle}>eSewa</Text>
+                  <Text style={styles.paymentOptionSubtitle}>Pay securely with eSewa</Text>
                 </View>
               </View>
               <View style={styles.paymentOptionRight}>
