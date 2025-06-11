@@ -26,7 +26,7 @@ const TabNavigator = () => {
 
           if (route.name === "Menu") {
             iconName = focused ? "book" : "book-outline"
-          } else if (route.name === "Cart") {
+          } else if (route.name === "My Picks") {
             iconName = focused ? "basket" : "basket-outline"
             // Wrap cart icon with badge
             return (
@@ -52,7 +52,7 @@ const TabNavigator = () => {
       })}
     >
       <Tab.Screen name="Menu" component={HomeScreen} />
-      <Tab.Screen name="Cart" component={CartScreen} />
+      <Tab.Screen name="My Picks" component={CartScreen} />
       <Tab.Screen name="Order" component={OrderScreen} />
     </Tab.Navigator>
   )

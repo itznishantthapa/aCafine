@@ -128,14 +128,14 @@ const CartScreen = ({ navigation }) => {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Your Cart</Text>
+          <Text style={styles.headerTitle}>My Picks</Text>
         </View>
         <View style={styles.emptyCart}>
           <Ionicons name="basket-outline" size={80} color="#CCCCCC" />
-          <Text style={styles.emptyCartText}>Your cart is empty</Text>
-          <Text style={styles.emptyCartSubtext}>Add some delicious items to get started!</Text>
+          <Text style={styles.emptyCartText}>Your tray is empty</Text>
+          <Text style={styles.emptyCartSubtext}>Pick some delicious items to get started!</Text>
           <TouchableOpacity style={styles.shopButton} onPress={() => navigation.navigate("Menu")}>
-            <Text style={styles.shopButtonText}>Start Shopping</Text>
+            <Text style={styles.shopButtonText}>Explore Menu</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -145,7 +145,7 @@ const CartScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Your Cart</Text>
+        <Text style={styles.headerTitle}>My Picks</Text>
         <TouchableOpacity onPress={handleClearCart}>
           <Text style={styles.clearButton}>Clear All</Text>
         </TouchableOpacity>
@@ -168,7 +168,7 @@ const CartScreen = ({ navigation }) => {
             onPress={() => setEatMode("PACK")}
           >
             <Ionicons name="bag-outline" size={20} color={eatMode === "PACK" ? "#FFFFFF" : "#333333"} />
-            <Text style={[styles.eatModeText, eatMode === "PACK" && styles.selectedEatModeText]}>Takeaway</Text>
+            <Text style={[styles.eatModeText, eatMode === "PACK" && styles.selectedEatModeText]}>Pack</Text>
           </TouchableOpacity>
         </View>
       </View>

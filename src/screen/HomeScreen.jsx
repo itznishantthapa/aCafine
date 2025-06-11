@@ -12,8 +12,10 @@ import {
   ActivityIndicator,
   RefreshControl,
   Dimensions,
+  StatusBar,
 } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 import FoodCarousel from "../component/common/FoodCarousel"
 import FoodCard from "../component/common/FoodCard"
 import { AppContext } from "../context/AppContext"
@@ -127,13 +129,15 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle={"dark-content"}/>
       {viewMode === "carousel" ? (
         <View style={styles.carouselViewContainer}>
           {/* Greeting Section */}
           <View style={styles.greetingContainer}>
+            {/* <MaterialCommunityIcons size={50} name="food-outline" style={{position:'absolute', top:60,right:60}}/> */}
             <View style={styles.greetingContent}>
               <Text style={styles.welcomeText}>Welcome to</Text>
-              <Text style={styles.cafeName}>aCafine Cafe</Text>
+              <Text style={styles.cafeName}>Purwanchal Cafe</Text>
               <View style={styles.userGreeting}>
                 <Text style={styles.greetingPrefix}>Hello,</Text>
                 <Text style={styles.userName}>Nishant</Text>
@@ -141,7 +145,11 @@ const HomeScreen = () => {
               <Text style={styles.subText}>Tell us what would you like to have!</Text>
             </View>
           </View>
-
+            <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+            <Ionicons name="close"/>
+            <View style={{borderWidth:0.5,borderColor:'black',width:'85%' ,height:0}}/>
+            <Ionicons name="close"/>
+            </View>
           {/* Categories Section */}
           <View style={styles.categoriesContainer}>
             <ScrollView
@@ -160,7 +168,7 @@ const HomeScreen = () => {
               onPress={() => setViewMode(viewMode === "carousel" ? "grid" : "carousel")}
             >
               <Ionicons name={viewMode === "carousel" ? "grid-outline" : "albums-outline"} size={20} color="#333333" />
-              <Text style={styles.toggleText}>{viewMode === "carousel" ? "Grid View" : "Carousel View"}</Text>
+              <Text style={styles.toggleText}>{viewMode === "carousel" ? "Menu" : "Menu"}</Text>
             </TouchableOpacity>
           </View>
 
@@ -180,7 +188,7 @@ const HomeScreen = () => {
           <View style={styles.greetingContainer}>
             <View style={styles.greetingContent}>
               <Text style={styles.welcomeText}>Welcome to</Text>
-              <Text style={styles.cafeName}>aCafine Cafe</Text>
+              <Text style={styles.cafeName}>Purwanchal Cafe</Text>
               <View style={styles.userGreeting}>
                 <Text style={styles.greetingPrefix}>Hello,</Text>
                 <Text style={styles.userName}>Nishant</Text>
@@ -188,6 +196,12 @@ const HomeScreen = () => {
               <Text style={styles.subText}>Tell us what would you like to have!</Text>
             </View>
           </View>
+
+          <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+            <Ionicons name="close"/>
+            <View style={{borderWidth:0.5,borderColor:'black',width:'85%' ,height:0}}/>
+            <Ionicons name="close"/>
+            </View>
 
           {/* Categories Section */}
           <View style={styles.categoriesContainer}>
@@ -207,7 +221,7 @@ const HomeScreen = () => {
               onPress={() => setViewMode(viewMode === "carousel" ? "grid" : "carousel")}
             >
               <Ionicons name={viewMode === "carousel" ? "grid-outline" : "albums-outline"} size={20} color="#333333" />
-              <Text style={styles.toggleText}>{viewMode === "carousel" ? "Grid View" : "Carousel View"}</Text>
+              <Text style={styles.toggleText}>{viewMode === "carousel" ? "Menu" : "Menu"}</Text>
             </TouchableOpacity>
           </View>
 
@@ -243,8 +257,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: screenWidth * 0.05,
     paddingVertical: screenHeight * 0.02, // Reduced from 0.04
     backgroundColor: "#FFFFFF",
-    borderBottomWidth: 1,
-    borderBottomColor: "#F5F5F5",
+    // borderBottomWidth: 1,
+    // borderBottomColor: "#F5F5F5",
   },
   greetingContent: {
     alignItems: "flex-start",
