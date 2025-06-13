@@ -44,6 +44,8 @@ export const AppProvider = ({ children }) => {
     fetchDishes();
   }, []);
 
+
+
   return (
     <AppContext.Provider 
       value={{

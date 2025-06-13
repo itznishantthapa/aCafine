@@ -14,6 +14,7 @@ import {
 } from "react-native"
 import { Ionicons, MaterialIcons } from "@expo/vector-icons"
 import { useFocusEffect } from "@react-navigation/native"
+import getAccessToken from "../service/apis/getToken"
 
 const OrderScreen = ({ navigation }) => {
   const [orders, setOrders] = useState([])
@@ -25,9 +26,15 @@ const OrderScreen = ({ navigation }) => {
   const fetchOrders = async () => {
     try {
       setError(null)
+      const token = getAccessToken();
+
+      if (!token) {
+        Alert.alert("Error", "Authentication token not found. Please login again.")
+        return
+      }
       const response = await fetch('http://127.0.0.1:8000/api/get-user-orders/', {
         headers: {
-          'Authorization': `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzEyMTExLCJpYXQiOjE3NDk2NTIxMTEsImp0aSI6IjgwNTlhNDdmMjU0NzRiNGFiYWQxYWI1NGZlNTU0OGI4IiwidXNlcl9pZCI6Mn0.jcTmoiNB_FlvIU_zhEaIZ6YURdQ8fzhlp7B1JAj4qv4"}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
@@ -102,9 +109,15 @@ const OrderScreen = ({ navigation }) => {
     setIsCheckingStatus(true)
     const latestOrder = orders[0]
     try {
+      const token = getAccessToken();
+      console.log(token)
+      if (!token) {
+        Alert.alert("Error", "Authentication token not found. Please login again.")
+        return
+      }
       const response = await fetch(`http://127.0.0.1:8000/api/get-user-orders/`, {
         headers: {
-          Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzEyMTExLCJpYXQiOjE3NDk2NTIxMTEsImp0aSI6IjgwNTlhNDdmMjU0NzRiNGFiYWQxYWI1NGZlNTU0OGI4IiwidXNlcl9pZCI6Mn0.jcTmoiNB_FlvIU_zhEaIZ6YURdQ8fzhlp7B1JAj4qv4"}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       })

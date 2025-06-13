@@ -12,12 +12,17 @@ import { CartAnimationProvider } from "./src/context/CartAnimationContext"
 import { CartProvider } from "./src/context/CartContext"
 import CartBadge from "./src/component/common/CartBadge"
 import { AppProvider } from "./src/context/AppContext"
-
+import { useState, useEffect } from "react"
+import Dashboard from "./src/screen/seller/Dashboard"
+import AddDish from "./src/screen/seller/AddDish"
+import ManageMenu from "./src/screen/seller/ManageMenu"
+import AllOrder from "./src/screen/seller/AllOrder"
+import SplashScreen from "./src/screen/SplashScreen"
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
 
-const TabNavigator = () => {
+const CustomerTabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -28,7 +33,6 @@ const TabNavigator = () => {
             iconName = focused ? "book" : "book-outline"
           } else if (route.name === "My Picks") {
             iconName = focused ? "basket" : "basket-outline"
-            // Wrap cart icon with badge
             return (
               <CartBadge>
                 <Ionicons name={iconName} size={size} color={color} />
@@ -59,30 +63,60 @@ const TabNavigator = () => {
 }
 
 const AppContent = () => {
+  const [isSeller, setIsSeller] = useState(true)
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  useEffect(() => {
+    // Set isInitialized to true after 3 seconds
+    const timer = setTimeout(() => {
+      setIsInitialized(true)
+    }, 3000)
+
+    // Cleanup timeout on unmount
+    return () => clearTimeout(timer)
+  }, [])
+
   return (
     <SafeAreaProvider style={{ flex: 1, backgroundColor: "#1c1835" }}>
-        <CartProvider>
-          <CartAnimationProvider>
-            <NavigationContainer>
-              <Stack.Navigator screenOptions={{ headerShown: false }}>
-          
-                <Stack.Screen name="Tabs" component={TabNavigator} />
-                
-                <Stack.Screen
-                  name="Payment"
-                  component={PaymentScreen}
-                  options={{
-                    headerShown: true,
-                    title: "eSewa Payment",
-                    headerStyle: { backgroundColor: "#4CAF50" },
-                    headerTintColor: "#FFFFFF",
-                    headerTitleStyle: { fontWeight: "bold" },
-                  }}
+      <CartProvider>
+        <CartAnimationProvider>
+          <NavigationContainer>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              {!isInitialized ? (
+                <Stack.Screen 
+                  name="Splash" 
+                  component={SplashScreen}
+                  options={{ headerShown: false }}
                 />
-              </Stack.Navigator>
-            </NavigationContainer>
-          </CartAnimationProvider>
-        </CartProvider>
+              ) : isSeller ? (
+                // Seller Screens
+                <>
+                  <Stack.Screen name="Dashboard" component={Dashboard} />
+                  <Stack.Screen name="AddDish" component={AddDish} />
+                  <Stack.Screen name="ManageMenu" component={ManageMenu} />
+                  <Stack.Screen name="AllOrder" component={AllOrder} />
+                </>
+              ) : (
+                // Customer Screens
+                <>
+                  <Stack.Screen name="Tabs" component={CustomerTabNavigator} />
+                  <Stack.Screen
+                    name="Payment"
+                    component={PaymentScreen}
+                    options={{
+                      headerShown: true,
+                      title: "eSewa Payment",
+                      headerStyle: { backgroundColor: "#4CAF50" },
+                      headerTintColor: "#FFFFFF",
+                      headerTitleStyle: { fontWeight: "bold" },
+                    }}
+                  />
+                </>
+              )}
+            </Stack.Navigator>
+          </NavigationContainer>
+        </CartAnimationProvider>
+      </CartProvider>
     </SafeAreaProvider>
   )
 }

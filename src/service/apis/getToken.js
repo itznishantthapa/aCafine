@@ -1,0 +1,5 @@
+const getAccessToken=()=>{
+    return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5ODY1OTI1LCJpYXQiOjE3NDk4MDU5MjUsImp0aSI6IjU5OGZlODJjMzdhYTQ0Zjc5MWMwNGY2NWUxZjQwMzUxIiwidXNlcl9pZCI6Mn0.4Wc3J5TXjKy5ZiO6eBjeZl59QoK3ZsCJlxGxG4X3qJQ"
+  }
+
+export default getAccessToken;
