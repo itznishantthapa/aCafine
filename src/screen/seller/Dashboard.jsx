@@ -18,9 +18,16 @@ import { FontAwesome6, Ionicons } from "@expo/vector-icons"
 import { useFocusEffect } from "@react-navigation/native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import getAccessToken from "../../service/apis/getToken"
+import { getApiUrl, API_ENDPOINTS, getImageUrl } from "../../service/config"
 import OrderCard from '../../component/common/OrderCard';
 
 const Dashboard = ({ navigation }) => {
+
+  useEffect(() => {
+    StatusBar.setBackgroundColor('black'); // Android only
+    StatusBar.setBarStyle('light-content'); // iOS & Android
+  }, []);
+
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [orders, setOrders] = useState([])
@@ -64,7 +71,7 @@ const Dashboard = ({ navigation }) => {
   const fetchData = async () => {
     try {
       setError(null)
-      const token = getAccessToken();
+      const token = await getAccessToken();
 
       if (!token) {
         setError("Authentication token not found. Please login again.")
@@ -73,7 +80,7 @@ const Dashboard = ({ navigation }) => {
       }
 
       // Fetch all orders
-      const ordersResponse = await fetch("http://127.0.0.1:8000/api/get-all-orders/", {
+      const ordersResponse = await fetch(getApiUrl(API_ENDPOINTS.GET_ALL_ORDERS), {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -88,7 +95,7 @@ const Dashboard = ({ navigation }) => {
       setOrders(ordersData)
 
       // Fetch dishes
-      const dishesResponse = await fetch("http://127.0.0.1:8000/api/get-all-dish/", {
+      const dishesResponse = await fetch(getApiUrl(API_ENDPOINTS.GET_ALL_DISHES), {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -170,7 +177,7 @@ const Dashboard = ({ navigation }) => {
         return
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/api/mark-order-ready/?id=${orderId}`, {
+      const response = await fetch(getApiUrl(`${API_ENDPOINTS.MARK_ORDER_READY}?id=${orderId}`), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -231,13 +238,14 @@ const Dashboard = ({ navigation }) => {
         <TouchableOpacity style={styles.retryButton} onPress={fetchData}>
           <Text style={styles.retryButtonText}>Try Again</Text>
         </TouchableOpacity>
+     
       </View>
     )
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      {/* <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" /> */}
 
       {/* Header */}
       <View style={styles.header}>
@@ -409,7 +417,7 @@ const Dashboard = ({ navigation }) => {
               <View key={dish.id} style={styles.menuItemCard}>
                 <Image
                   source={{
-                    uri: dish.image.startsWith("http") ? dish.image : `http://127.0.0.1:8000${dish.image}`,
+                    uri: getImageUrl(dish.image),
                   }}
                   style={styles.menuItemImage}
                 />

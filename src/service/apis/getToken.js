@@ -1,5 +1,17 @@
-const getAccessToken=()=>{
-    return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5ODY1OTI1LCJpYXQiOjE3NDk4MDU5MjUsImp0aSI6IjU5OGZlODJjMzdhYTQ0Zjc5MWMwNGY2NWUxZjQwMzUxIiwidXNlcl9pZCI6Mn0.4Wc3J5TXjKy5ZiO6eBjeZl59QoK3ZsCJlxGxG4X3qJQ"
-  }
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const getAccessToken = async () => {
+    try {
+        const token = await AsyncStorage.getItem('accessToken');
+        if (!token) {
+            console.log('No access token found');
+            return null;
+        }
+        return token;
+    } catch (error) {
+        console.error('Error getting access token:', error);
+        return null;
+    }
+}
 
 export default getAccessToken;

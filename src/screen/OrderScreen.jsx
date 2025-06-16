@@ -15,6 +15,7 @@ import {
 import { Ionicons, MaterialIcons } from "@expo/vector-icons"
 import { useFocusEffect } from "@react-navigation/native"
 import getAccessToken from "../service/apis/getToken"
+import { getApiUrl, API_ENDPOINTS } from "../service/config"
 
 const OrderScreen = ({ navigation }) => {
   const [orders, setOrders] = useState([])
@@ -26,20 +27,48 @@ const OrderScreen = ({ navigation }) => {
   const fetchOrders = async () => {
     try {
       setError(null)
-      const token = getAccessToken();
+      const token = await getAccessToken();
+      console.log('Token by orderscreen for get users order', token)
 
       if (!token) {
-        Alert.alert("Error", "Authentication token not found. Please login again.")
+        setError("Authentication token not found. Please login again.")
         return
       }
-      const response = await fetch('http://127.0.0.1:8000/api/get-user-orders/', {
+
+      const response = await fetch(getApiUrl(API_ENDPOINTS.GET_USER_ORDERS), {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          setError("Session expired. Please login again.")
+          return
+        }
+        throw new Error('Failed to fetch orders')
+      }
+
       const data = await response.json();
-      setOrders(data);
+      console.log('Users order ', data)
+      
+      // Check if data is an array (direct response) or has orders property
+      if (Array.isArray(data)) {
+        if (data.length === 0) {
+          setError("no_orders")
+        } else {
+          setOrders(data);
+        }
+      } else if (data.success) {
+        if (!data.orders || data.orders.length === 0) {
+          setError("no_orders")
+        } else {
+          setOrders(data.orders);
+        }
+      } else {
+        setError(data.message || 'Failed to fetch orders')
+      }
     } catch (err) {
       setError('Failed to fetch orders. Please try again.');
       console.error("Error fetching orders:", err);
@@ -109,22 +138,30 @@ const OrderScreen = ({ navigation }) => {
     setIsCheckingStatus(true)
     const latestOrder = orders[0]
     try {
-      const token = getAccessToken();
-      console.log(token)
+      const token = await getAccessToken();
       if (!token) {
-        Alert.alert("Error", "Authentication token not found. Please login again.")
+        setError("Authentication token not found. Please login again.")
         return
       }
-      const response = await fetch(`http://127.0.0.1:8000/api/get-user-orders/`, {
+
+      const response = await fetch(getApiUrl(API_ENDPOINTS.GET_USER_ORDERS), {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       })
-      const data = await response.json()
 
-      if (data.length > 0) {
-        const updatedLatestOrder = data[0]
+      if (!response.ok) {
+        if (response.status === 401) {
+          setError("Session expired. Please login again.")
+          return
+        }
+        throw new Error('Failed to check order status')
+      }
+
+      const data = await response.json()
+      if (data.success && data.orders && data.orders.length > 0) {
+        const updatedLatestOrder = data.orders[0]
         // Update the latest order in the orders array
         setOrders((prevOrders) => {
           const updatedOrders = [...prevOrders]
@@ -224,7 +261,8 @@ const OrderScreen = ({ navigation }) => {
               style={styles.historyOrderCard}
               onPress={() => {
                 // You can navigate to order details screen here
-                Alert.alert("Order Details", `Order #${order.order_id} details`)
+                // Alert.alert("Order Details", `Order #${order.order_id} details`)
+                navigation.navigate('TestScreen')
               }}
             >
               <View style={styles.historyOrderHeader}>
@@ -264,6 +302,20 @@ const OrderScreen = ({ navigation }) => {
   }
 
   if (error) {
+    if (error === "no_orders") {
+      return (
+        <SafeAreaView style={styles.container}>
+          <View style={styles.emptyContainer}>
+            <Ionicons name="receipt-outline" size={80} color="#CCCCCC" />
+            <Text style={styles.emptyTitle}>No Orders Yet</Text>
+            <Text style={styles.emptySubtitle}>Your order history will appear here once you place your first order.</Text>
+            <TouchableOpacity style={styles.orderNowButton} onPress={() => navigation.navigate("Menu")}>
+              <Text style={styles.orderNowButtonText}>Order Now</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      )
+    }
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.errorContainer}>

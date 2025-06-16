@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   View,
   Text,
@@ -14,12 +14,15 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
 } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { Ionicons } from "@expo/vector-icons"
 import * as ImagePicker from "expo-image-picker"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import getAccessToken from "../../service/apis/getToken"
+import { getApiUrl, API_ENDPOINTS } from "../../service/config"
+import { useFocusEffect } from "@react-navigation/native"
 
 const CATEGORIES = [
   { id: "veg", name: "Vegetarian" },
@@ -31,6 +34,20 @@ const CATEGORIES = [
 ]
 
 const AddDish = ({ navigation }) => {
+
+  useFocusEffect(
+    useCallback(() => {
+      // When screen is focused
+      StatusBar.setBackgroundColor('red');
+      StatusBar.setBarStyle('light-content');
+  
+      return () => {
+        // When screen is unfocused (backed or navigated away)
+        StatusBar.setBackgroundColor('black'); // or default color
+        StatusBar.setBarStyle('light-content');
+      };
+    }, [])
+  );
   // Form state
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
@@ -160,7 +177,7 @@ const AddDish = ({ navigation }) => {
       }
 
       // Make API request
-      const response = await fetch("http://127.0.0.1:8000/api/create-dish/", {
+      const response = await fetch(getApiUrl(API_ENDPOINTS.CREATE_DISH), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

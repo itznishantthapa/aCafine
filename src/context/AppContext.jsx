@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useReducer, useState } from 'react';
+import { getApiUrl, API_ENDPOINTS } from '../service/config';
 
 export const AppContext = createContext();
 
@@ -23,11 +24,13 @@ function reducer(state, action) {
 
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
 
   const fetchDishes = async () => {
     try {
       dispatch({ type: 'SET_LOADING' });
-      const res = await fetch('http://127.0.0.1:8000/api/get-all-dish/');
+      const res = await fetch(getApiUrl(API_ENDPOINTS.GET_ALL_DISHES));
       const data = await res.json();
       if (data.success) {
         dispatch({ type: 'SET_DISHES', payload: data.dishes });
@@ -44,15 +47,17 @@ export const AppProvider = ({ children }) => {
     fetchDishes();
   }, []);
 
-
-
   return (
     <AppContext.Provider 
       value={{
         allDishState: {
           ...state,
           refreshDishes: fetchDishes
-        }
+        },
+        isAuthenticated,
+        setIsAuthenticated,
+        isInitialized,
+        setIsInitialized
       }}
     >
       {children}

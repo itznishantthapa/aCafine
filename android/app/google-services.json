@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "39274285306",
+    "project_id": "acafine-54821",
+    "storage_bucket": "acafine-54821.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39274285306:android:c3c697481372eb2ef16143",
+        "android_client_info": {
+          "package_name": "com.anonymous.aCafine"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "39274285306-fj2f29eo2hfen0m81a0nnaekhlq9f98f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.anonymous.aCafine",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "39274285306-glhrg3h26mgt4td189v2o0jaqlemmbub.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAzmCvTgN2iwNe4nN9Pb6JnpBFKNomUIA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "39274285306-glhrg3h26mgt4td189v2o0jaqlemmbub.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "39274285306-pspkdp2ut5v0pr8lbq01llbcedhbv7mj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.anonymous.aCafine"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -126,7 +126,7 @@ const PaymentScreen = ({ route, navigation }) => {
           index: 0,
           routes: [
             { 
-              name: "Tabs",
+              name: "CustomerTabs",
               state: {
                 routes: [{ name: "Order" }]
               }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import {
   View,
   Text,
@@ -10,63 +10,58 @@ import {
   StatusBar,
   ActivityIndicator,
   Alert,
+  Image,
 } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-// import { GoogleSignin } from "@react-native-google-signin/google-signin"
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axios from 'axios'
+import { GoogleSignin } from "@react-native-google-signin/google-signin"
+import { AppContext } from "../context/AppContext"
 
 const SignUpScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false)
-  const [loadingType, setLoadingType] = useState(null) // 'google' or 'guest'
+  const { setIsAuthenticated } = useContext(AppContext)
 
-
-  // useEffect(() => {
-  //   GoogleSignin.configure({
-  //     scopes: ['email'],
-  //     webClientId: "739951398724-oi1i3298q8klvngcd36l6rroev2nm9mm.apps.googleusercontent.com",
-  //   })
-  // }, [])
+  useEffect(() => {
+    GoogleSignin.configure({
+      scopes: ['email', 'profile'],
+      webClientId: "39274285306-glhrg3h26mgt4td189v2o0jaqlemmbub.apps.googleusercontent.com",
+    })
+  }, [])
 
   const handleGoogleSignUp = async () => {
-    // setLoading(true)
-    // setLoadingType("google")
-
-    // try {
-    //   await GoogleSignin.hasPlayServices()
-    //     // Sign out first to clear any existing sessions
-    //     await GoogleSignin.signOut()
-    //     const userInfo = await GoogleSignin.signIn()
-    //     if (!userInfo || !userInfo.data || !userInfo.data.scopes) {
-    //       console.log('GoogleSignIn error', 'There was some issue with getting id token', userInfo)
-    //       return
-    //     }
-  
-    //     console.log(userInfo)
-  
-    // } catch (error) {
-    //   // We might want to provide this error information to an error reporting service
-    //   console.error('GoogleSignIn error', error)
-    // }finally {
-    //   setLoading(false)
-    //   setLoadingType(null)
-    // }
-  }
-
-  const handleGuestContinue = async () => {
     setLoading(true)
-    setLoadingType("guest")
 
     try {
-      // Simulate guest setup process
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await GoogleSignin.hasPlayServices()
+      await GoogleSignin.signOut()
+      const userInfo = await GoogleSignin.signIn()
+      console.log('Google Sign In Response:', userInfo)
+      
+      if (!userInfo || !userInfo.data || !userInfo.data.scopes) {
+        return
+      }
+      const response = await axios.post('http://192.168.1.75:8000/api/signup/', {
+        email: userInfo.data.user.email,
+        first_name: userInfo.data.user.givenName,
+        last_name: userInfo.data.user.familyName
+      })
 
-      // Navigate to main app as guest
-      navigation.replace("Tabs")
+      if (response.data.success) {
+        await AsyncStorage.setItem('accessToken', response.data.tokens.access)
+        await AsyncStorage.setItem('refreshToken', response.data.tokens.refresh)
+        setIsAuthenticated(true)
+      } else {
+        Alert.alert("Error", "Failed to sign up. Please try again.")
+      }
     } catch (error) {
-      Alert.alert("Error", "Something went wrong. Please try again.")
-      console.error("Guest Continue Error:", error)
+      console.error("SignUp Error:", error)
+      Alert.alert(
+        "Error",
+        error.message || "Something went wrong. Please try again."
+      )
     } finally {
       setLoading(false)
-      setLoadingType(null)
     }
   }
 
@@ -78,17 +73,20 @@ const SignUpScreen = ({ navigation }) => {
       <View style={styles.header}>
         <View style={styles.logoContainer}>
           <View style={styles.logoIcon}>
-            <Ionicons name="cafe" size={40} color="#4CAF50" />
+            <Image 
+              style={styles.logoImage} 
+              source={require("../assets/images/logocafe.png")} 
+            />
           </View>
-          <Text style={styles.appName}>aCafine</Text>
-          <Text style={styles.appTagline}>Cafe</Text>
+          <Text style={styles.appName}>Purwanchal</Text>
+          <Text style={styles.appTagline}>Cafe & Restaurant</Text>
         </View>
       </View>
 
       {/* Content Section */}
       <View style={styles.content}>
         <View style={styles.welcomeSection}>
-          <Text style={styles.welcomeTitle}>Welcome to aCafine</Text>
+          <Text style={styles.welcomeTitle}>Welcome to Purwanchal</Text>
           <Text style={styles.welcomeSubtitle}>
             Discover delicious food and beverages{"\n"}crafted with love, just for you
           </Text>
@@ -96,36 +94,18 @@ const SignUpScreen = ({ navigation }) => {
 
         {/* Action Buttons */}
         <View style={styles.buttonContainer}>
-          {/* Continue with Google Button */}
           <TouchableOpacity
-            style={[styles.primaryButton, loading && loadingType !== "google" && styles.disabledButton]}
+            style={[styles.primaryButton, loading && styles.disabledButton]}
             onPress={handleGoogleSignUp}
             disabled={loading}
             activeOpacity={0.8}
           >
-            {loading && loadingType === "google" ? (
+            {loading ? (
               <ActivityIndicator size="small" color="#FFFFFF" />
             ) : (
               <>
                 <Ionicons name="logo-google" size={20} color="#FFFFFF" />
                 <Text style={styles.primaryButtonText}>Continue with Google</Text>
-              </>
-            )}
-          </TouchableOpacity>
-
-          {/* Continue as Guest Button */}
-          <TouchableOpacity
-            style={[styles.secondaryButton, loading && loadingType !== "guest" && styles.disabledButton]}
-            onPress={handleGuestContinue}
-            disabled={loading}
-            activeOpacity={0.8}
-          >
-            {loading && loadingType === "guest" ? (
-              <ActivityIndicator size="small" color="#4CAF50" />
-            ) : (
-              <>
-                <Ionicons name="person-outline" size={20} color="#4CAF50" />
-                <Text style={styles.secondaryButtonText}>Continue as Guest</Text>
               </>
             )}
           </TouchableOpacity>
@@ -140,10 +120,7 @@ const SignUpScreen = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Footer */}
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Made with ❤️ for food lovers</Text>
-      </View>
+
     </SafeAreaView>
   )
 }
@@ -164,33 +141,39 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   logoIcon: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     backgroundColor: "#F1F8E9",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 20,
     shadowColor: "#4CAF50",
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 8,
     },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 6,
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+    elevation: 10,
+  },
+  logoImage: {
+    height: '100%',
+    width: '100%',
+    borderRadius: 60,
   },
   appName: {
-    fontSize: 36,
+    fontSize: 48,
     fontWeight: "bold",
     color: "#333333",
-    letterSpacing: -1,
+    letterSpacing: -2,
+    marginBottom: 8,
   },
   appTagline: {
-    fontSize: 18,
+    fontSize: 20,
     color: "#f37240",
     fontWeight: "600",
-    marginTop: -5,
+    letterSpacing: 1,
   },
   content: {
     flex: 0.5,
@@ -241,31 +224,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#FFFFFF",
   },
-  secondaryButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#FFFFFF",
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: "#4CAF50",
-    gap: 12,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  secondaryButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#4CAF50",
-  },
   disabledButton: {
     opacity: 0.6,
   },
@@ -283,17 +241,7 @@ const styles = StyleSheet.create({
     color: "#4CAF50",
     fontWeight: "600",
   },
-  footer: {
-    flex: 0.1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingBottom: 20,
-  },
-  footerText: {
-    fontSize: 14,
-    color: "#666666",
-    fontStyle: "italic",
-  },
+ 
 })
 
 export default SignUpScreen

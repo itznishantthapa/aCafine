@@ -20,6 +20,7 @@ import { Ionicons } from "@expo/vector-icons"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useFocusEffect } from "@react-navigation/native"
 import getAccessToken from "../../service/apis/getToken"
+import { getApiUrl, API_ENDPOINTS, getImageUrl } from "../../service/config"
 import SearchBar from '../../component/common/SearchBar'
 
 const ManageMenu = ({ navigation }) => {
@@ -53,7 +54,7 @@ const ManageMenu = ({ navigation }) => {
         return
       }
 
-      const response = await fetch("http://127.0.0.1:8000/api/get-all-dish/", {
+      const response = await fetch(getApiUrl(API_ENDPOINTS.GET_ALL_DISHES), {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -74,7 +75,7 @@ const ManageMenu = ({ navigation }) => {
           currentPrice: dish.current_price,
           originalPrice: dish.original_price,
           discount: dish.discount,
-          image: dish.image.startsWith("http") ? dish.image : `http://127.0.0.1:8000${dish.image}`,
+          image: getImageUrl(dish.image),
           isAvailable: dish.is_available,
           category: dish.category,
           isVeg: dish.is_veg,
@@ -112,7 +113,7 @@ const ManageMenu = ({ navigation }) => {
       filterDishes(updatedDishes, selectedCategory, searchQuery)
 
       // Make API request to update availability
-      const response = await fetch(`http://127.0.0.1:8000/api/update-dish/`, {
+      const response = await fetch(getApiUrl(API_ENDPOINTS.UPDATE_DISH), {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -167,7 +168,7 @@ const ManageMenu = ({ navigation }) => {
         return
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/api/delete-dish/?id=${dishId}`, {
+      const response = await fetch(getApiUrl(`${API_ENDPOINTS.DELETE_DISH}?id=${dishId}`), {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

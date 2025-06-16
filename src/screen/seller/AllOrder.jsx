@@ -18,6 +18,7 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useFocusEffect } from "@react-navigation/native"
 import getAccessToken from "../../service/apis/getToken"
+import { getApiUrl, API_ENDPOINTS } from "../../service/config"
 import SearchBar from '../../component/common/SearchBar';
 import OrderCard from '../../component/common/OrderCard';
 
@@ -42,8 +43,7 @@ const AllOrders = ({ navigation, route }) => {
   const fetchOrders = async () => {
     try {
       setError(null)
-      const token = getAccessToken();
-
+      const token = await getAccessToken();
 
       if (!token) {
         setError("Authentication token not found. Please login again.")
@@ -51,7 +51,7 @@ const AllOrders = ({ navigation, route }) => {
         return
       }
 
-      const response = await fetch("http://127.0.0.1:8000/api/get-all-orders/", {
+      const response = await fetch(getApiUrl(API_ENDPOINTS.GET_ALL_ORDERS), {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -132,7 +132,7 @@ const AllOrders = ({ navigation, route }) => {
   // Mark order as ready
   const handleMarkAsReady = async (orderId) => {
     try {
-      const token = getAccessToken();
+      const token =await  getAccessToken();
 
       if (!token) {
         Alert.alert("Error", "Authentication token not found. Please login again.")
@@ -145,7 +145,7 @@ const AllOrders = ({ navigation, route }) => {
       applyFilters(updatedOrders, activeFilter, searchQuery)
 
       // Make API request
-      const response = await fetch(`http://127.0.0.1:8000/api/mark-order-ready/?id=${orderId}`, {
+      const response = await fetch(getApiUrl(`${API_ENDPOINTS.MARK_ORDER_READY}?id=${orderId}`), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
