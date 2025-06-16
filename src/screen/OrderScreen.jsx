@@ -8,12 +8,13 @@ import {
   ScrollView,
   TouchableOpacity,
   RefreshControl,
-  SafeAreaView,
   ActivityIndicator,
   Alert,
+  StatusBar,
 } from "react-native"
 import { Ionicons, MaterialIcons } from "@expo/vector-icons"
 import { useFocusEffect } from "@react-navigation/native"
+import { SafeAreaView } from "react-native-safe-area-context"
 import getAccessToken from "../service/apis/getToken"
 import { getApiUrl, API_ENDPOINTS } from "../service/config"
 
@@ -292,76 +293,121 @@ const OrderScreen = ({ navigation }) => {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#4CAF50" />
-          <Text style={styles.loadingText}>Loading your orders...</Text>
+      <>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+        <View style={styles.container}>
+          <SafeAreaView style={{flex: 1}}>
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#4CAF50" />
+              <Text style={styles.loadingText}>Loading your orders...</Text>
+            </View>
+          </SafeAreaView>
         </View>
-      </SafeAreaView>
+      </>
     )
   }
 
   if (error) {
     if (error === "no_orders") {
       return (
-        <SafeAreaView style={styles.container}>
-          <View style={styles.emptyContainer}>
-            <Ionicons name="receipt-outline" size={80} color="#CCCCCC" />
-            <Text style={styles.emptyTitle}>No Orders Yet</Text>
-            <Text style={styles.emptySubtitle}>Your order history will appear here once you place your first order.</Text>
-            <TouchableOpacity style={styles.orderNowButton} onPress={() => navigation.navigate("Menu")}>
-              <Text style={styles.orderNowButtonText}>Order Now</Text>
-            </TouchableOpacity>
+        <>
+          <StatusBar
+            translucent
+            backgroundColor="transparent"
+            barStyle="dark-content"
+          />
+          <View style={styles.container}>
+            <SafeAreaView style={{flex: 1}}>
+              <View style={styles.emptyContainer}>
+                <Ionicons name="receipt-outline" size={80} color="#CCCCCC" />
+                <Text style={styles.emptyTitle}>No Orders Yet</Text>
+                <Text style={styles.emptySubtitle}>Your order history will appear here once you place your first order.</Text>
+                <TouchableOpacity style={styles.orderNowButton} onPress={() => navigation.navigate("Menu")}>
+                  <Text style={styles.orderNowButtonText}>Order Now</Text>
+                </TouchableOpacity>
+              </View>
+            </SafeAreaView>
           </View>
-        </SafeAreaView>
+        </>
       )
     }
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.errorContainer}>
-          <Ionicons name="alert-circle-outline" size={60} color="#FF4444" />
-          <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={fetchOrders}>
-            <Text style={styles.retryButtonText}>Try Again</Text>
-          </TouchableOpacity>
+      <>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+        <View style={styles.container}>
+          <SafeAreaView style={{flex: 1}}>
+            <View style={styles.errorContainer}>
+              <Ionicons name="alert-circle-outline" size={60} color="#FF4444" />
+              <Text style={styles.errorText}>{error}</Text>
+              <TouchableOpacity style={styles.retryButton} onPress={fetchOrders}>
+                <Text style={styles.retryButtonText}>Try Again</Text>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
         </View>
-      </SafeAreaView>
+      </>
     )
   }
 
   if (orders.length === 0) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.emptyContainer}>
-          <Ionicons name="receipt-outline" size={80} color="#CCCCCC" />
-          <Text style={styles.emptyTitle}>No Orders Yet</Text>
-          <Text style={styles.emptySubtitle}>Your order history will appear here once you place your first order.</Text>
-          <TouchableOpacity style={styles.orderNowButton} onPress={() => navigation.navigate("Menu")}>
-            <Text style={styles.orderNowButtonText}>Order Now</Text>
-          </TouchableOpacity>
+      <>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+        <View style={styles.container}>
+          <SafeAreaView style={{flex: 1}}>
+            <View style={styles.emptyContainer}>
+              <Ionicons name="receipt-outline" size={80} color="#CCCCCC" />
+              <Text style={styles.emptyTitle}>No Orders Yet</Text>
+              <Text style={styles.emptySubtitle}>Your order history will appear here once you place your first order.</Text>
+              <TouchableOpacity style={styles.orderNowButton} onPress={() => navigation.navigate("Menu")}>
+                <Text style={styles.orderNowButtonText}>Order Now</Text>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
         </View>
-      </SafeAreaView>
+      </>
     )
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>My Orders</Text>
-        <TouchableOpacity onPress={onRefresh} disabled={refreshing}>
-          <Ionicons name="refresh" size={24} color={refreshing ? "#CCCCCC" : "#4CAF50"} />
-        </TouchableOpacity>
-      </View>
+    <>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
+      <View style={styles.container}>
+        <SafeAreaView style={{flex: 1}}>
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>My Orders</Text>
+            <TouchableOpacity onPress={onRefresh} disabled={refreshing}>
+              <Ionicons name="refresh" size={24} color={refreshing ? "#CCCCCC" : "#4CAF50"} />
+            </TouchableOpacity>
+          </View>
 
-      <ScrollView
-        style={styles.scrollView}
-        showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      >
-        {renderLatestOrder()}
-        {renderOrderHistory()}
-      </ScrollView>
-    </SafeAreaView>
+          <ScrollView
+            style={styles.scrollView}
+            showsVerticalScrollIndicator={false}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          >
+            {renderLatestOrder()}
+            {renderOrderHistory()}
+          </ScrollView>
+        </SafeAreaView>
+      </View>
+    </>
   )
 }
 

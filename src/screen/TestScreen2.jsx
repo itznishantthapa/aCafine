@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, StatusBar } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-const TestScreen2 = () => {
+const TestScreen2 = ({navigation}) => {
   return (
     <>
       <StatusBar
@@ -12,8 +12,8 @@ const TestScreen2 = () => {
       />
       <View style={{backgroundColor:"purple", flex: 1}}>
         <SafeAreaView style={{flex: 1}}>
-          <View style={{flex: 1}}>
-            <Text>TestScreen2</Text>
+          <View style={{flex: 1,justifyContent:'center'}}>
+          <Text style={{padding:20, backgroundColor:'red', borderRadius:40}} onPress={()=>navigation.navigate('TestScreen')}>TestScreen</Text>
           </View>
         </SafeAreaView>
       </View>

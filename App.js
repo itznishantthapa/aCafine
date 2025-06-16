@@ -84,7 +84,6 @@ const AppContent = () => {
   }
 
   useEffect(() => {
-   
     const initialize = async () => {
       // await clearAuthTokens();
       try {
@@ -104,58 +103,58 @@ const AppContent = () => {
     initialize()
   }, [setIsAuthenticated, setIsInitialized])
 
-  if (!isInitialized) {
-    return <SplashScreen />
-  }
-
   return (
-    <SafeAreaProvider >
+    <SafeAreaProvider style={{flex:1,backgroundColor:'white'}}>
       <SafeAreaView style={{ flex: 1}} edges={['right', 'bottom', 'left']}>
-      <CartProvider>
-        <CartAnimationProvider>
-          <NavigationContainer>
-            <Stack.Navigator screenOptions={{ headerShown: false, animation:'slide_from_right' }} >
-              {!isAuthenticated ? (
-                <Stack.Screen 
-                  name="SignUpScreen" 
-                  component={SignUpScreen}
-                  // options={{ headerShown: false }}
-                />
-              ) : (
-                <>
-                  {isSeller ? (
-                    // Seller Screens
-                    <>
-                      <Stack.Screen name="Dashboard" component={Dashboard} />
-                      <Stack.Screen name="AddDish" component={AddDish} />
-                      <Stack.Screen name="ManageMenu" component={ManageMenu} />
-                      <Stack.Screen name="AllOrder" component={AllOrder} />
-                    </>
-                  ) : (
-                    // Customer Screens
-                    <>
-                      <Stack.Screen name="CustomerTabs" component={CustomerTabNavigator} />
-                      <Stack.Screen name="TestScreen" component={TestScreen} />
-                      <Stack.Screen name="TestScreen2" component={TestScreen2} />
-                      <Stack.Screen
-                        name="Payment"
-                        component={PaymentScreen}
-                        options={{
-                          headerShown: true,
-                          title: "eSewa Payment",
-                          headerStyle: { backgroundColor: "#4CAF50" },
-                          headerTintColor: "#FFFFFF",
-                          headerTitleStyle: { fontWeight: "bold" },
-                        }}
-                      />
-                    </>
-                  )}
-                </>
-              )}
-            </Stack.Navigator>
-          </NavigationContainer>
-        </CartAnimationProvider>
-      </CartProvider>
+        <CartProvider>
+          <CartAnimationProvider>
+            <NavigationContainer>
+              <Stack.Navigator screenOptions={{ headerShown: false, animation:'fade' }} >
+                {!isInitialized ? (
+                  <Stack.Screen 
+                    name="SplashScreen" 
+                    component={SplashScreen}
+                  />
+                ) : !isAuthenticated ? (
+                  <Stack.Screen 
+                    name="SignUpScreen" 
+                    component={SignUpScreen}
+                  />
+                ) : (
+                  <>
+                    {isSeller ? (
+                      // Seller Screens
+                      <>
+                        <Stack.Screen name="Dashboard" component={Dashboard} />
+                        <Stack.Screen name="AddDish" component={AddDish} />
+                        <Stack.Screen name="ManageMenu" component={ManageMenu} />
+                        <Stack.Screen name="AllOrder" component={AllOrder} />
+                      </>
+                    ) : (
+                      // Customer Screens
+                      <>
+                        <Stack.Screen name="CustomerTabs" component={CustomerTabNavigator} />
+                        <Stack.Screen name="TestScreen" component={TestScreen} />
+                        <Stack.Screen name="TestScreen2" component={TestScreen2} />
+                        <Stack.Screen
+                          name="Payment"
+                          component={PaymentScreen}
+                          options={{
+                            headerShown: true,
+                            title: "eSewa Payment",
+                            headerStyle: { backgroundColor: "#4CAF50" },
+                            headerTintColor: "#FFFFFF",
+                            headerTitleStyle: { fontWeight: "bold" },
+                          }}
+                        />
+                      </>
+                    )}
+                  </>
+                )}
+              </Stack.Navigator>
+            </NavigationContainer>
+          </CartAnimationProvider>
+        </CartProvider>
       </SafeAreaView>
     </SafeAreaProvider>
   )

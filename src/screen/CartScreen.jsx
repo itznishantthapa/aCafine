@@ -9,9 +9,10 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-  SafeAreaView,
+  StatusBar,
 } from "react-native"
 import { Ionicons, AntDesign } from "@expo/vector-icons"
+import { SafeAreaView } from "react-native-safe-area-context"
 import { useCart } from "../context/CartContext"
 import PaymentBottomSheet from "../component/common/PaymentBottomSheet"
 
@@ -126,87 +127,105 @@ const CartScreen = ({ navigation }) => {
 
   if (items.length === 0) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>My Picks</Text>
+      <>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+        <View style={styles.container}>
+          <SafeAreaView style={{flex: 1}}>
+            <View style={styles.header}>
+              <Text style={styles.headerTitle}>My Picks</Text>
+            </View>
+            <View style={styles.emptyCart}>
+              <Ionicons name="basket-outline" size={80} color="#CCCCCC" />
+              <Text style={styles.emptyCartText}>Your tray is empty</Text>
+              <Text style={styles.emptyCartSubtext}>Pick some delicious items to get started!</Text>
+              <TouchableOpacity style={styles.shopButton} onPress={() => navigation.navigate("Menu")}>
+                <Text style={styles.shopButtonText}>Explore Menu</Text>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
         </View>
-        <View style={styles.emptyCart}>
-          <Ionicons name="basket-outline" size={80} color="#CCCCCC" />
-          <Text style={styles.emptyCartText}>Your tray is empty</Text>
-          <Text style={styles.emptyCartSubtext}>Pick some delicious items to get started!</Text>
-          <TouchableOpacity style={styles.shopButton} onPress={() => navigation.navigate("Menu")}>
-            <Text style={styles.shopButtonText}>Explore Menu</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+      </>
     )
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>My Picks</Text>
-        <TouchableOpacity onPress={handleClearCart}>
-          <Text style={styles.clearButton}>Clear All</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Eat Mode Selection */}
-      <View style={styles.eatModeContainer}>
-        <Text style={styles.eatModeTitle}>Dining Option:</Text>
-        <View style={styles.eatModeButtons}>
-          <TouchableOpacity
-            style={[styles.eatModeButton, eatMode === "EAT" && styles.selectedEatMode]}
-            onPress={() => setEatMode("EAT")}
-          >
-            <Ionicons name="restaurant-outline" size={20} color={eatMode === "EAT" ? "#FFFFFF" : "#333333"} />
-            <Text style={[styles.eatModeText, eatMode === "EAT" && styles.selectedEatModeText]}>Dine In</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.eatModeButton, eatMode === "PACK" && styles.selectedEatMode]}
-            onPress={() => setEatMode("PACK")}
-          >
-            <Ionicons name="bag-outline" size={20} color={eatMode === "PACK" ? "#FFFFFF" : "#333333"} />
-            <Text style={[styles.eatModeText, eatMode === "PACK" && styles.selectedEatModeText]}>Pack</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <ScrollView style={styles.cartItems} showsVerticalScrollIndicator={false}>
-        {items.map(renderCartItem)}
-      </ScrollView>
-
-      {/* Order Summary */}
-      <View style={styles.orderSummary}>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Total Items:</Text>
-          <Text style={styles.summaryValue}>{totalItems}</Text>
-        </View>
-        <View style={[styles.summaryRow, styles.totalRow]}>
-          <Text style={styles.totalLabel}>Total Amount:</Text>
-          <Text style={styles.totalValue}>Rs. {totalAmount.toFixed(2)}</Text>
-        </View>
-      </View>
-
-      {/* Place Order Button */}
-      <TouchableOpacity
-        style={[styles.placeOrderButton, processingPayment && styles.disabledButton]}
-        onPress={handlePlaceOrder}
-        disabled={processingPayment}
-      >
-        <Text style={styles.placeOrderText}>{processingPayment ? "Processing..." : "Place Order"}</Text>
-      </TouchableOpacity>
-
-      {/* Payment Bottom Sheet */}
-      <PaymentBottomSheet
-        visible={showPaymentSheet}
-        onClose={() => setShowPaymentSheet(false)}
-        onPaymentMethodSelect={handlePaymentMethodSelect}
-        totalAmount={totalAmount}
-        loading={processingPayment}
+    <>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
       />
-    </SafeAreaView>
+      <View style={styles.container}>
+        <SafeAreaView style={{flex: 1}}>
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>My Picks</Text>
+            <TouchableOpacity onPress={handleClearCart}>
+              <Text style={styles.clearButton}>Clear All</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Eat Mode Selection */}
+          <View style={styles.eatModeContainer}>
+            <Text style={styles.eatModeTitle}>Dining Option:</Text>
+            <View style={styles.eatModeButtons}>
+              <TouchableOpacity
+                style={[styles.eatModeButton, eatMode === "EAT" && styles.selectedEatMode]}
+                onPress={() => setEatMode("EAT")}
+              >
+                <Ionicons name="restaurant-outline" size={20} color={eatMode === "EAT" ? "#FFFFFF" : "#333333"} />
+                <Text style={[styles.eatModeText, eatMode === "EAT" && styles.selectedEatModeText]}>Dine In</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.eatModeButton, eatMode === "PACK" && styles.selectedEatMode]}
+                onPress={() => setEatMode("PACK")}
+              >
+                <Ionicons name="bag-outline" size={20} color={eatMode === "PACK" ? "#FFFFFF" : "#333333"} />
+                <Text style={[styles.eatModeText, eatMode === "PACK" && styles.selectedEatModeText]}>Pack</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <ScrollView style={styles.cartItems} showsVerticalScrollIndicator={false}>
+            {items.map(renderCartItem)}
+          </ScrollView>
+
+          {/* Order Summary */}
+          <View style={styles.orderSummary}>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>Total Items:</Text>
+              <Text style={styles.summaryValue}>{totalItems}</Text>
+            </View>
+            <View style={[styles.summaryRow, styles.totalRow]}>
+              <Text style={styles.totalLabel}>Total Amount:</Text>
+              <Text style={styles.totalValue}>Rs. {totalAmount.toFixed(2)}</Text>
+            </View>
+          </View>
+
+          {/* Place Order Button */}
+          <TouchableOpacity
+            style={[styles.placeOrderButton, processingPayment && styles.disabledButton]}
+            onPress={handlePlaceOrder}
+            disabled={processingPayment}
+          >
+            <Text style={styles.placeOrderText}>{processingPayment ? "Processing..." : "Place Order"}</Text>
+          </TouchableOpacity>
+
+          {/* Payment Bottom Sheet */}
+          <PaymentBottomSheet
+            visible={showPaymentSheet}
+            onClose={() => setShowPaymentSheet(false)}
+            onPaymentMethodSelect={handlePaymentMethodSelect}
+            totalAmount={totalAmount}
+            loading={processingPayment}
+          />
+        </SafeAreaView>
+      </View>
+    </>
   )
 }
 

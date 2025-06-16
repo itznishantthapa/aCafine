@@ -7,7 +7,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   FlatList,
   ActivityIndicator,
   RefreshControl,
@@ -16,6 +15,7 @@ import {
 } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { SafeAreaView } from "react-native-safe-area-context"
 import FoodCarousel from "../component/common/FoodCarousel"
 import FoodCard from "../component/common/FoodCard"
 import Header from "../component/common/Header"
@@ -105,124 +105,150 @@ const HomeScreen = () => {
   // Loading state
   if (allDishState.allDishes.length === 0) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#4CAF50" />
-          <Text style={styles.loadingText}>Loading delicious dishes...</Text>
+      <>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+        <View style={styles.container}>
+          <SafeAreaView style={{flex: 1}}>
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#4CAF50" />
+              <Text style={styles.loadingText}>Loading delicious dishes...</Text>
+            </View>
+          </SafeAreaView>
         </View>
-      </SafeAreaView>
+      </>
     )
   }
 
   // Error state
   if (allDishState.error && allDishState.allDishes.length === 0) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.errorContainer}>
-          <Ionicons name="alert-circle-outline" size={60} color="#FF4444" />
-          <Text style={styles.errorTitle}>Oops! Something went wrong</Text>
-          <Text style={styles.errorText}>{allDishState.error}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={allDishState.refreshDishes}>
-            <Text style={styles.retryButtonText}>Try Again</Text>
-          </TouchableOpacity>
+      <>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+        <View style={styles.container}>
+          <SafeAreaView style={{flex: 1}}>
+            <View style={styles.errorContainer}>
+              <Ionicons name="alert-circle-outline" size={60} color="#FF4444" />
+              <Text style={styles.errorTitle}>Oops! Something went wrong</Text>
+              <Text style={styles.errorText}>{allDishState.error}</Text>
+              <TouchableOpacity style={styles.retryButton} onPress={allDishState.refreshDishes}>
+                <Text style={styles.retryButtonText}>Try Again</Text>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
         </View>
-      </SafeAreaView>
+      </>
     )
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={"dark-content"} />
-      {viewMode === "carousel" ? (
-        <View style={styles.carouselViewContainer}>
-          <Header />
-          
-          <SearchBar
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholder="Search for dishes..."
-          />
+    <>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
+      <View style={styles.container}>
+        <SafeAreaView style={{flex: 1}}>
+          {viewMode === "carousel" ? (
+            <View style={styles.carouselViewContainer}>
+              <Header />
+              
+              <SearchBar
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                placeholder="Search for dishes..."
+              />
 
-          {/* Categories Section */}
-          <View style={styles.categoriesContainer}>
+              {/* Categories Section */}
+              <View style={styles.categoriesContainer}>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.categoriesScrollContainer}
+                >
+                  {categories.map(renderCategoryButton)}
+                </ScrollView>
+              </View>
+
+              {/* View Toggle Button */}
+              <View style={styles.toggleContainer}>
+                <TouchableOpacity
+                  style={styles.toggleButton}
+                  onPress={() => setViewMode(viewMode === "carousel" ? "grid" : "carousel")}
+                >
+                  <Ionicons name={viewMode === "carousel" ? "grid-outline" : "albums-outline"} size={20} color="#333333" />
+                  <Text style={styles.toggleText}>{viewMode === "carousel" ? "Menu" : "Menu"}</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Food Display Section */}
+              <View style={styles.carouselContainer}>
+                <FoodCarousel data={filteredData} />
+              </View>
+            </View>
+          ) : (
             <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.categoriesScrollContainer}
+              showsVerticalScrollIndicator={false}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={allDishState.refreshDishes} colors={["#4CAF50"]} tintColor="#4CAF50" />
+              }
             >
-              {categories.map(renderCategoryButton)}
+              <Header />
+
+              <SearchBar
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                placeholder="Search for dishes..."
+              />
+
+              {/* Categories Section */}
+              <View style={styles.categoriesContainer}>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.categoriesScrollContainer}
+                >
+                  {categories.map(renderCategoryButton)}
+                </ScrollView>
+              </View>
+
+              {/* View Toggle Button */}
+              <View style={styles.toggleContainer}>
+                <TouchableOpacity
+                  style={styles.toggleButton}
+                  onPress={() => setViewMode(viewMode === "carousel" ? "grid" : "carousel")}
+                >
+                  <Ionicons name={viewMode === "carousel" ? "grid-outline" : "albums-outline"} size={20} color="#333333" />
+                  <Text style={styles.toggleText}>{viewMode === "carousel" ? "Menu" : "Menu"}</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Food Display Section */}
+              <View style={styles.gridContainer}>
+                <FlatList
+                  data={filteredData}
+                  renderItem={renderGridItem}
+                  numColumns={2}
+                  scrollEnabled={false}
+                  contentContainerStyle={styles.flatListContainer}
+                  columnWrapperStyle={styles.row}
+                  ItemSeparatorComponent={() => <View style={styles.separator} />}
+                  keyExtractor={(item) => item.id.toString()}
+                />
+              </View>
             </ScrollView>
-          </View>
-
-          {/* View Toggle Button */}
-          <View style={styles.toggleContainer}>
-            <TouchableOpacity
-              style={styles.toggleButton}
-              onPress={() => setViewMode(viewMode === "carousel" ? "grid" : "carousel")}
-            >
-              <Ionicons name={viewMode === "carousel" ? "grid-outline" : "albums-outline"} size={20} color="#333333" />
-              <Text style={styles.toggleText}>{viewMode === "carousel" ? "Menu" : "Menu"}</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Food Display Section */}
-          <View style={styles.carouselContainer}>
-            <FoodCarousel data={filteredData} />
-          </View>
-        </View>
-      ) : (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={allDishState.refreshDishes} colors={["#4CAF50"]} tintColor="#4CAF50" />
-          }
-        >
-          <Header />
-
-          <SearchBar
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholder="Search for dishes..."
-          />
-
-          {/* Categories Section */}
-          <View style={styles.categoriesContainer}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.categoriesScrollContainer}
-            >
-              {categories.map(renderCategoryButton)}
-            </ScrollView>
-          </View>
-
-          {/* View Toggle Button */}
-          <View style={styles.toggleContainer}>
-            <TouchableOpacity
-              style={styles.toggleButton}
-              onPress={() => setViewMode(viewMode === "carousel" ? "grid" : "carousel")}
-            >
-              <Ionicons name={viewMode === "carousel" ? "grid-outline" : "albums-outline"} size={20} color="#333333" />
-              <Text style={styles.toggleText}>{viewMode === "carousel" ? "Menu" : "Menu"}</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Food Display Section */}
-          <View style={styles.gridContainer}>
-            <FlatList
-              data={filteredData}
-              renderItem={renderGridItem}
-              numColumns={2}
-              scrollEnabled={false}
-              contentContainerStyle={styles.flatListContainer}
-              columnWrapperStyle={styles.row}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
-              keyExtractor={(item) => item.id.toString()}
-            />
-          </View>
-        </ScrollView>
-      )}
-    </SafeAreaView>
+          )}
+        </SafeAreaView>
+      </View>
+    </>
   )
 }
 

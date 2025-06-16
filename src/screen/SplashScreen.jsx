@@ -1,8 +1,9 @@
 "use client"
 
-import { StyleSheet, View, Animated, Image } from "react-native"
+import { StyleSheet, View, Animated, Image, StatusBar } from "react-native"
 import { useEffect, useRef } from "react"
 import { Ionicons } from "@expo/vector-icons"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 const SplashScreen = () => {
   // Animation values
@@ -65,61 +66,70 @@ const SplashScreen = () => {
   }, [])
 
   return (
-    <View style={styles.container}>
-      {/* Animated Background */}
-      <Animated.View style={[styles.backgroundGradient, { opacity: backgroundOpacity }]} />
+    <>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
+      <View style={styles.container}>
+        <SafeAreaView style={{flex: 1,justifyContent:'center',alignItems:'center'}}>
+          {/* Animated Background */}
+          <Animated.View style={[styles.backgroundGradient, { opacity: backgroundOpacity }]} />
 
-      {/* Logo Container */}
-      <View style={styles.logoContainer}>
-        {/* Animated Logo Icon */}
-        <Animated.View
-          style={[
-            styles.logoIcon,
-            {
-              transform: [{ scale: logoScale }],
-              opacity: logoOpacity,
-            },
-          ]}
-        >
-          {/* <Ionicons name="cafe" size={60} color="#4CAF50" /> */}
-          <Image style={{height:'100%',width:"100%"}} source={require("../assets/images/logocafe.png")} />
-        </Animated.View>
+          {/* Logo Container */}
+          <View style={styles.logoContainer}>
+            {/* Animated Logo Icon */}
+            <Animated.View
+              style={[
+                styles.logoIcon,
+                {
+                  transform: [{ scale: logoScale }],
+                  opacity: logoOpacity,
+                },
+              ]}
+            >
+              {/* <Ionicons name="cafe" size={60} color="#4CAF50" /> */}
+              <Image style={{height:'100%',width:"100%"}} source={require("../assets/images/logocafe.png")} />
+            </Animated.View>
 
-        {/* Animated App Name */}
-        <Animated.Text
-          style={[
-            styles.appName,
-            {
-              opacity: textOpacity,
-              transform: [{ translateY: textTranslateY }],
-            },
-          ]}
-        >
-          Purwanchal
-        </Animated.Text>
+            {/* Animated App Name */}
+            <Animated.Text
+              style={[
+                styles.appName,
+                {
+                  opacity: textOpacity,
+                  transform: [{ translateY: textTranslateY }],
+                },
+              ]}
+            >
+              Purwanchal
+            </Animated.Text>
 
-        {/* Animated Tagline */}
-        <Animated.Text
-          style={[
-            styles.tagline,
-            {
-              opacity: taglineOpacity,
-            },
-          ]}
-        >
-          Cafe & Restaurant
-        </Animated.Text>
+            {/* Animated Tagline */}
+            <Animated.Text
+              style={[
+                styles.tagline,
+                {
+                  opacity: taglineOpacity,
+                },
+              ]}
+            >
+              Cafe & Restaurant
+            </Animated.Text>
+          </View>
+
+          {/* Loading Indicator */}
+          <Animated.View style={[styles.loadingContainer, { opacity: taglineOpacity }]}>
+            <View style={styles.loadingDots}>
+              <LoadingDot delay={0} />
+              <LoadingDot delay={200} />
+              <LoadingDot delay={400} />
+            </View>
+          </Animated.View>
+        </SafeAreaView>
       </View>
-
-      {/* Loading Indicator */}
-      <Animated.View style={[styles.loadingContainer, { opacity: taglineOpacity }]}>
-        <View style={styles.loadingDots}>
-          <LoadingDot delay={0} />
-          <LoadingDot delay={200} />
-          <LoadingDot delay={400} />
-        </View>
-      </Animated.View>
-    </View>
+    </>
   )
 }
 
